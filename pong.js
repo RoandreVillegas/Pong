@@ -3,7 +3,7 @@
  * - render the screen - done
  * - code start button (any key to start)
  * - create user and computer paddles (create them as objects) - done
- * - code user movement
+ * - code user movement - in progress
  * - create the ball - done
  * - code for ball movement
  * - then code for computer movement
@@ -56,6 +56,8 @@ const ball = {
     x: canvas.width/2,
     y: canvas.height/2,
     r: 20,
+    speedX: 5,
+    speedY: 5,
     start_angle: 0,
     end_angle: Math.PI*2,
     colour: "purple"
@@ -80,7 +82,19 @@ function draw_ball(x, y, r, start_angle, end_angle, colour){
     ctx.fill();
     ctx.stroke();
 }
-
+document.addEventListener("keydown", move_paddle);
+function move_paddle(e){
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    var code = e.keyCode || e.which;
+    if(code === 87){
+        user.y -= 10;
+    }else if(code === 83){
+        user.y += 10;
+    }
+}
+function update(){
+    ctx.clearRect(0,0,canvas.width, canvas.height);
+}
 // canvas.addEventListener('keydown', keyListener);
 // function keyListener(e){
 
@@ -100,7 +114,7 @@ function create_game(){
 }
 function init(){
     create_game();
-    update();
+    //update();
 }
-let frame_per_second = 50;
+let frame_per_second = 120;
 setInterval(init, 1000/frame_per_second); //repeatedly calls the create_game function
