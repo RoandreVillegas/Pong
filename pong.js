@@ -28,9 +28,6 @@
 //creating initial game screen
 const canvas = document.getElementById("pong");
 const ctx = canvas.getContext("2d");
-var direction = {
-    
-}
 const user = {
     width: 20,
     height: 200,
@@ -56,8 +53,8 @@ const ball = {
     x: canvas.width/2,
     y: canvas.height/2,
     r: 20,
-    speedX: 5,
-    speedY: 5,
+    speedX: 10,
+    speedY: 10,
     start_angle: 0,
     end_angle: Math.PI*2,
     colour: "purple"
@@ -87,19 +84,18 @@ function move_paddle(e){
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     var code = e.keyCode || e.which;
     if(code === 87){
-        user.y -= 10;
+        user.y -= 20;
     }else if(code === 83){
-        user.y += 10;
+        user.y += 20;
     }
 }
 function update(){
-    ctx.clearRect(0,0,canvas.width, canvas.height);
+    ball.x += ball.speedX;
+    ball.y += ball.speedY;
+    if(ball.y + ball.radius > canvas.height || ball.y - ball.radius < 0){
+        ball.speedY *= -1;
+    }
 }
-// canvas.addEventListener('keydown', keyListener);
-// function keyListener(e){
-
-// }
-
 function display_score(){
     ctx.fillStyle = "white";
     ctx.font = "50px georgia"
@@ -107,14 +103,16 @@ function display_score(){
     ctx.fillText(com.score, (3*canvas.width)/4, 100);
 }
 function create_game(){
+    //clear the game board
+    draw_paddle(0, 0, canvas.width, canvas.height, "black");
     draw_paddle(user.x, user.y, user.width, user.height, user.colour)
     draw_paddle(com.x, com.y, com.width, com.height, com.colour)
     draw_ball(ball.x, ball.y, ball.r, ball.start_angle, ball.end_angle, ball.colour)
     display_score();
 }
 function init(){
+    update();
     create_game();
-    //update();
 }
-let frame_per_second = 120;
+let frame_per_second = 50;
 setInterval(init, 1000/frame_per_second); //repeatedly calls the create_game function
