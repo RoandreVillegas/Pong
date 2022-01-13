@@ -1,31 +1,3 @@
-/**
- * steps for pong:
- * - render the screen - done
- * - code start button (any key to start)
- * - create user and computer paddles (create them as objects) - done
- * - code user movement - in progress
- * - create the ball - done
- * - code for initial ball movement - done
- * - code for collision detection
- * - then code for computer movement
- * - create middle border
- * - add scores for each player - done
- * ...(add more later)
- */
-/**
- * OBJECTS:
- * - user paddle
- * - computer paddle
- * - net
- * - the game as a whole
- */
-/**
- * logic for player movement:
- * - press W or S to move up or down, respectively
- * - add keydown listener
- * - if key is not W or S, do nothing
- * - otherwise, move at specified speed
- */
 //creating initial game screen
 const canvas = document.getElementById("pong");
 const ctx = canvas.getContext("2d");
