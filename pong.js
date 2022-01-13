@@ -5,7 +5,8 @@
  * - create user and computer paddles (create them as objects) - done
  * - code user movement - in progress
  * - create the ball - done
- * - code for ball movement
+ * - code for initial ball movement - done
+ * - code for collision detection
  * - then code for computer movement
  * - create middle border
  * - add scores for each player - done
@@ -53,8 +54,9 @@ const ball = {
     x: canvas.width/2,
     y: canvas.height/2,
     r: 20,
-    speedX: 10,
+    speedX: -10,
     speedY: 10,
+    speed: 5,
     start_angle: 0,
     end_angle: Math.PI*2,
     colour: "purple"
@@ -90,11 +92,52 @@ function move_paddle(e){
     }
 }
 function update(){
+    let curr_pos = user.y;
     ball.x += ball.speedX;
     ball.y += ball.speedY;
-    if(ball.y + ball.radius > canvas.height || ball.y - ball.radius < 0){
+    if(ball.y + ball.r > canvas.height || ball.y - ball.r < 0){
         ball.speedY *= -1;
     }
+    if(ball.x + ball.r > canvas.width){
+        user.score++;
+        reset_ball();
+    }else if(ball.x - ball.r < 0){
+        com.score++;
+        reset_ball();
+    }
+    //check to see who's side the ball is on
+    let player = (ball.x < canvas.width / 2) ? user : com;
+
+    if(detect_collision(ball, player)){
+        ball.speedX *= -1;
+    }
+    if (user.y < 0){
+        user.y = 0;
+    }
+    if(user.y > canvas.height - 200){
+        user.y = canvas.height - 200;
+    }
+    //computer AI
+    com.y += ((ball.y - (com.y + com.height/2))) * 0.1;
+}
+function detect_collision(curr_ball, curr_player){
+    curr_ball.top = curr_ball.y - curr_ball.r;
+    curr_ball.bottom = curr_ball.y + curr_ball.r;
+    curr_ball.left = curr_ball.x - curr_ball.r;
+    curr_ball.right = curr_ball.x + curr_ball.r;
+
+    curr_player.top = curr_player.y;
+    curr_player.bottom = curr_player.y + curr_player.height;
+    curr_player.left = curr_player.x;
+    curr_player.right = curr_player.x + curr_player.width;
+
+    return curr_ball.right > curr_player.left && curr_ball.bottom > curr_player.top && curr_ball.left < curr_player.right && curr_ball.top < curr_player.bottom ? true : false;
+}
+function reset_ball(){
+    ball.x = canvas.width/2;
+    ball.y = canvas.height/2;
+    ball.speed = 5;
+    ball.speedY = -ball.speedY;
 }
 function display_score(){
     ctx.fillStyle = "white";
@@ -105,6 +148,7 @@ function display_score(){
 function create_game(){
     //clear the game board
     draw_paddle(0, 0, canvas.width, canvas.height, "black");
+    
     draw_paddle(user.x, user.y, user.width, user.height, user.colour)
     draw_paddle(com.x, com.y, com.width, com.height, com.colour)
     draw_ball(ball.x, ball.y, ball.r, ball.start_angle, ball.end_angle, ball.colour)
